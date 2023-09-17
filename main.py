@@ -105,8 +105,10 @@ def main():
     colored_image_gray, _ = color_mapping(upper, lower, 'gray', index_clipped)
     colored_image, cm = color_mapping(upper, lower, 'RdYlGn', index_clipped)
 
-    print(np.sum(colored_image > 0.6))
+    # count green pixel
+    # print(np.sum(colored_image > 0.6))
 
+    # print figure
     figu = plt.figure()
     gs = figu.add_gridspec(2,2)
     axi1 = figu.add_subplot(gs[0])
@@ -143,7 +145,6 @@ def main():
     rgba = np.array(img, dtype=np.float32)
 
     img.save('result/color_mapped.tiff')
-    # img.save('result/result.png')
     np.save('result/result.npy', index_clipped)
 
     
@@ -157,20 +158,9 @@ def main():
     cv2.imwrite("result/masked.png", dst)
 
     # Visualisasi hasil
-    # cv2.imshow("Raw", raw)
     cv2.imwrite("result/raw.png", raw)
-    # cv2.waitKey(0)
-    # cv2.imshow("VI Result", vi)
     cv2.imwrite("result/vi_result.tiff", vi)
-    # cv2.waitKey(0)
-    # cv2.imshow("Colored Result", open_cv_image)
-    # cv2.waitKey(0)
-    # cv2.imshow("Mask", mask)
     cv2.imwrite("result/mask.png", mask)
-    # cv2.waitKey(0)
-    # cv2.imshow("Masked", masked)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
 
    
 if __name__ == "__main__":
