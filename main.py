@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from PIL import Image
-from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 import tkinter.messagebox
 import os
