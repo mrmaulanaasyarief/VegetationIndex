@@ -37,6 +37,22 @@ def vegetation_index(img, method):
     vi = np.clip(vi, -1, 1)
     return vi
 
+# Calculate index histogram
+def index_histogram(index_clear):
+    # perc -> values of the histogram bins
+    # edges -> the edges of the bins
+    perc, edges, _ = plt.hist(index_clear, bins=100, range=(-1, 1), color='darkcyan', edgecolor='black')
+    # plt.show()
+    plt.close()
+
+    # -- Find the real min, max values of the vegetation_index -- #
+    # -- Find the real values of the min, max based on the frequency of the vegetation_index histogramm' s bin in each examined interval -- #
+    mask = perc > (0.05 * len(index_clear))
+    edges = edges[:-1] 
+    min_v = edges[mask].min()
+    max_v = edges[mask].max()
+    return min_v, max_v
+
 def main():
 
     while True:
@@ -70,25 +86,12 @@ def main():
     raw = img
     vi = vegetation_index(img, 'gli') #gli or vari
     # print(vi)
-    
+
     index_clear = vi[~np.isnan(vi)]
-
-    # -- Calculate index histogram -- #
-    # perc -> values of the histogram bins
-    # edges -> the edges of the bins
-    perc, edges, _ = plt.hist(index_clear, bins=100, range=(-1, 1), color='darkcyan', edgecolor='black')
-    # plt.show()
-    plt.close()
-
-    # -- Find the real min, max values of the vegetation_index -- #
-    # -- Find the real values of the min, max based on the frequency of the vegetation_index histogramm' s bin in each examined interval -- #
-    mask = perc > (0.05 * len(index_clear))
-    edges = edges[:-1] 
-    min_v = edges[mask].min()
-    max_v = edges[mask].max()
-    lower, upper = min_v, max_v
+    
+    lower, upper = index_histogram(index_clear)
     print(lower, upper)
-
+    
     index_clipped = np.clip(vi, lower, upper)
 
     # RdYlGn, gray
