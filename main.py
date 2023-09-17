@@ -20,6 +20,22 @@ def check_channel(img):
         image = img
         
     return image
+ # Calculate index 
+def vegetation_index(img, method):
+    # split the each RGB channel
+    r = img[:, :, 2].astype(np.float32)
+    g = img[:, :, 1].astype(np.float32)
+    b = img[:, :, 0].astype(np.float32)
+
+    if method == "gli":
+        # GLI
+        vi = np.divide((2 * g - r - b), (2 * g + r + b + 0.00001))
+    elif method == "vari":
+        # VARI
+        vi = np.divide((g - r), (g + r - b + 0.00001))
+       
+    vi = np.clip(vi, -1, 1)
+    return vi
 
 def main():
 
@@ -50,22 +66,11 @@ def main():
     image = check_channel(img)
 
     print('Processing image with shape {} x {}'.format(img.shape[0], img.shape[1]))
-    
+
     raw = img
-    r = img[:, :, 2].astype(np.float32)
-    g = img[:, :, 1].astype(np.float32)
-    b = img[:, :, 0].astype(np.float32)
-
-    # -- Calculate index -- #
-    # VARI
-    # vi = np.divide((g - r), (g + r - b + 0.00001))
-    # vi = np.clip(vi, -1, 1)
-    
-    # GLI
-    vi = np.divide((2 * g - r - b), (2 * g + r + b + 0.00001))
-    vi = np.clip(vi, -1, 1)
-
+    vi = vegetation_index(img, 'gli') #gli or vari
     # print(vi)
+    
     index_clear = vi[~np.isnan(vi)]
 
     # -- Calculate index histogram -- #
