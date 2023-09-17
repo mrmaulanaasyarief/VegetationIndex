@@ -8,6 +8,19 @@ from tkinter.filedialog import askopenfilename
 import tkinter.messagebox
 import os
 
+# check image channel, if more than 3 (RGB) than select only the RGB channel
+def check_channel(img):
+    h, w, ch = img.shape
+
+    if ch > 3:
+        image = img[:, :, :3].astype(float)
+        image[img[:, :, 3] == 0] = np.nan
+        empty_space = img[:, :, 3] == 0
+    else:
+        image = img
+        
+    return image
+
 def main():
 
     while True:
@@ -32,15 +45,9 @@ def main():
     # file berdasarkan selected file
     image_filename = filename
 
+    # read image file to opencv image
     img = cv2.imread(image_filename, cv2.IMREAD_UNCHANGED)
-    h, w, ch = img.shape
-
-    if ch > 3:
-        image = img[:, :, :3].astype(float)
-        image[img[:, :, 3] == 0] = np.nan
-        empty_space = img[:, :, 3] == 0
-    else:
-        image = img
+    image = check_channel(img)
 
     print('Processing image with shape {} x {}'.format(img.shape[0], img.shape[1]))
     
