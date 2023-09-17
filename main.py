@@ -53,6 +53,13 @@ def index_histogram(index_clear):
     max_v = edges[mask].max()
     return min_v, max_v
 
+# create color mapping
+def color_mapping(upper, lower, mode, index_clipped):
+    cNorm = mpl.colors.Normalize(vmax=upper, vmin=lower)
+    cm = plt.get_cmap(mode)
+    colored_image = cm(cNorm(index_clipped))
+    return colored_image, cm
+
 def main():
 
     while True:
@@ -94,13 +101,9 @@ def main():
     
     index_clipped = np.clip(vi, lower, upper)
 
-    # RdYlGn, gray
-    cNorm = mpl.colors.Normalize(vmax=upper, vmin=lower)
-    cm = plt.get_cmap('RdYlGn')
-    colored_image = cm(cNorm(index_clipped))
-    
-    cm_gray = plt.get_cmap('gray')  
-    colored_image_gray = cm_gray(cNorm(index_clipped))
+    # mode = RdYlGn, gray
+    colored_image_gray, _ = color_mapping(upper, lower, 'gray', index_clipped)
+    colored_image, cm = color_mapping(upper, lower, 'RdYlGn', index_clipped)
 
     print(np.sum(colored_image > 0.6))
 
