@@ -3,11 +3,34 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from PIL import Image
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
+import tkinter.messagebox
+import os
 
 def main():
 
-    # Ganti dengan nama file citra drone yang sesuai
-    image_filename = "frame52.jpg"
+    while True:
+        filename = askopenfilename(title="Select Image File") # show an "Open" dialog box and return the path to the selected file
+        if(filename==""):
+            if tkinter.messagebox.askretrycancel("Error",  "No Image file selected"):
+                pass
+            else:
+                exit()
+        else:
+            if(filename.lower().endswith(".jpeg") or filename.lower().endswith(".jpg") or filename.lower().endswith(".png") or filename.lower().endswith(".tiff")):
+                break
+            else:
+                if tkinter.messagebox.askretrycancel("Error",  "Selected file must be in JPEG/JPG/PNG/TIFF format"):
+                    pass
+                else:
+                    exit()
+
+    path =  os.path.dirname(os.path.realpath(__file__))
+    print(filename)
+
+    # file berdasarkan selected file
+    image_filename = filename
 
     img = cv2.imread(image_filename, cv2.IMREAD_UNCHANGED)
     h, w, ch = img.shape
